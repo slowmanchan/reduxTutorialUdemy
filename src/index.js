@@ -1,5 +1,6 @@
 // Core react library for components (will not render to dom)
 // need react-dom lib to render things to the dom
+import _ from 'lodash';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import YTSearch from 'youtube-api-search';
@@ -21,25 +22,33 @@ class App extends Component {
     this.state = {
       videos: [],
       selectedVideo: null
-    };
 
-    YTSearch({key: API_KEY, term: 'surfboards'}, (videos) => {
-      this.setState({
-        videos: videos,
-        selectedVideo: videos[0]
-      });
-    });
+    };
+    this.videoSearch('surfboards');
   }
 // onVideoSelect function will change the selectedVideo state
 // we pass this call back to VideoList
 // VideoList will then pass to VideoListItem
 // VideoListItem will then call this function when an list item
 // is clicked.
+
+  videoSearch(term) {
+    YTSearch({key: API_KEY, term: term}, (videos) => {
+      this.setState({
+        videos: videos,
+        selectedVideo: videos[0]
+      });
+    });
+  }
+  // debounce (from lodash) takes the first arg (a func) and a delay (ms)
+  // basically, debounce sets a delay on your function
+  // below , the function videoSearch only runs every 300 ms
   render() {
+    const videoSearch = _.debounce((term) => { this.videoSearch(term) }, 300)
     return (
       <div>
-        <SearchBar />
-        <VideoDetail video={this.state.selectedVideo}/>
+        <SearchBar onSearchTermChange={videoSearch}/>
+          <VideoDetail video={this.state.selectedVideo}/>
         <VideoList
           onVideoSelect={selectedVideo => this.setState({selectedVideo}) }
           videos={this.state.videos}

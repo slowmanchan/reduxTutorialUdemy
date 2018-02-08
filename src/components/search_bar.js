@@ -11,7 +11,7 @@ class SearchBar extends Component {
 
     this.state = { term: '' };
   }
-  // render is called evertime setState is called
+  // render is called everytime setState is called
   // rerendering things (like <input /> s)
   render() {
 
@@ -19,14 +19,17 @@ class SearchBar extends Component {
       <div className='search-bar'>
         <input
           value={this.state.term}
-          onChange={e => this.setState({ ...this.state, term: e.target.value })}
+          onChange={e => this.onInputChange(e.target.value)}
         />
 
       </div>
     );
   }
 
-
+  onInputChange(term) {
+    this.setState({term});
+    this.props.onSearchTermChange(term);
+  }
   // handle user input with an event handler (eg onChange)
   // html elements emit an event object when user does something
   // wrap jsx with {this.onInputChange}
