@@ -1,8 +1,13 @@
 import React from 'react';
 
-const VideoDetail = (props) => {
+const VideoDetail = ({video}) => {
   // youtube video url (needs videoId)
   // we are putting this video into an iframe down below
+
+  if (!video) {
+    return <div>Loading...</div>
+  }
+  
   const videoId = video.id.videoId;
   const url = `https://www.youtube.com/embed/${videoId}`;
 
